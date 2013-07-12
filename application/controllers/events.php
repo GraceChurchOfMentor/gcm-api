@@ -72,8 +72,14 @@ class Events extends REST_Controller {
 
 		if ($this->response->format == 'html')
 		{
-			header('Content-type: text/html; charset=UTF-8');
-			echo $data['full_html'];
+			$template_data = array(
+				'title'     => 'Upcoming Events',
+				'full_page' => $args['full_page'],
+				'details'   => $args['show_details'],
+				'items'     => $data
+			);
+
+			$this->load->view('events_html', $template_data);
 		}
 		else
 		{
@@ -135,9 +141,12 @@ class Events extends REST_Controller {
 		// truncate array
 		$events = array_slice($events, 0, $count);
 
+		// remove key names from array
+		$events = array_values($events);
+
 		// add pretty-print strings
-		$events = array_map(function($date) use ($show_details, $full_page){
-			$date = array_map(function($event) use ($show_details, $full_page){
+		$events = array_map(function($date){
+			$date = array_map(function($event){
 				$new_event = array(
 					'date'              => $event['date'],
 					'event_name'        => $event['event_name'],
@@ -148,8 +157,6 @@ class Events extends REST_Controller {
 					'leader_name'       => $event['leader_name'],
 					'leader_email'      => $event['leader_email'],
 					'leader_phone'      => $event['leader_phone'],
-					'details'           => $show_details,
-					'full_page'         => $full_page
 				);
 
 				if (($event['start_time'] == '00:00:00') && ($event['end_time'] == '23:59:00'))
@@ -175,26 +182,6 @@ class Events extends REST_Controller {
 			return $date;
 		}, $events);
 
-		// remove key names from array
-		$events = array_values($events);
-
-		$template_data = array(
-			'header' => $full_page,
-			'footer' => $full_page,
-			'items' => $events
-		);
-
-		$full_html = $this->load->view('events_html', $template_data, TRUE);
-
-		return array(
-			'items' => $events,
-			'full_html' => $full_html
-		);
-	}
-
-	private function _output_json($json)
-	{
-		header('Content-type: application/json');
-		echo $json;
+		return $events;
 	}
 }

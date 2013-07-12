@@ -1,4 +1,4 @@
-<?php if ($header): ?>
+<?php if ($full_page): ?>
 	<!DOCTYPE html>
 	<html>
 		<head>
@@ -20,7 +20,7 @@
 						<?php if ($event['short_time_string'] !== ''): ?>
 							<span class="event-time"><?php echo $event['short_time_string']; ?></span>
 						<?php endif; ?>
-						<?php if ($event['details']): ?>
+						<?php if ($details): ?>
 							<div class="event-details">
 								<p><?php echo $event['event_description']; ?></p>
 								<p>
@@ -37,7 +37,7 @@
 	<?php endforeach; ?>
 </ul>
 
-<?php if ($footer): ?>
+<?php if ($full_page): ?>
 		</body>
 	</html>
 <?php endif; ?>
