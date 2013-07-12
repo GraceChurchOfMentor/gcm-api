@@ -1,1 +1,3 @@
 application/config/ccb.php
+application/cache
+*.swp

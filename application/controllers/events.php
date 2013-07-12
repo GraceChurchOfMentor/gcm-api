@@ -9,8 +9,8 @@ class Events extends REST_Controller {
 		parent::__construct();
 
 		$this->load->driver('cache', array('adapter' => 'file'));
-		$this->load->config('ccb');
-		$this->load->library('parser');
+		$this->load->library('ccb');
+		$this->load->config('gcm');
 		$this->default_count = $this->config->item('events_default_count');
 	}
 
@@ -25,7 +25,7 @@ class Events extends REST_Controller {
 			'group'        => $this->get('group'),
 			'search'       => $this->get('search'),
 			'show_details' => $this->get('show_details'),
-			'full_page'    => $this->get('full_page'),
+			'trim'         => $this->get('trim')
 		);
 
 		$cache_id = 'events/index?' . http_build_query($args);
@@ -67,7 +67,7 @@ class Events extends REST_Controller {
 				}, array('query'=>$args['search']));
 			}
 
-			$data = $this->_format_events($events, $args['count'], $args['show_details'], $args['full_page']);
+			$data = $this->_format_events($events, $args['count'], $args['show_details']);
 			$this->cache->save($cache_id, $data);
 		}
 
@@ -75,7 +75,7 @@ class Events extends REST_Controller {
 		{
 			$template_data = array(
 				'title'     => 'Upcoming Events',
-				'full_page' => $args['full_page'],
+				'full_page' => ! $args['trim'],
 				'details'   => $args['show_details'],
 				'items'     => $data
 			);
@@ -122,7 +122,7 @@ class Events extends REST_Controller {
 		return $events;
 	}
 
-	private function _format_events($events, $count, $show_details, $full_page)
+	private function _format_events($events, $count, $show_details)
 	{
 		// remove any leading asterisks
 		$events = array_map(function($event){

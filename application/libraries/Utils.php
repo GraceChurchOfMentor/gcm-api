@@ -2,6 +2,53 @@
 
 class Utils
 {
+	function __construct()
+	{
+		$this->CI =& get_instance();
+	}
+
+	public function cURL($url, $args=FALSE, $username=FALSE, $password=FALSE, $timeout=FALSE)
+	{
+		$args && ($args = '?' . http_build_query($args)) || $args = '';
+
+		$this->CI->load->driver('cache', array('adapter' => 'apc'));
+		$cache_id = md5("cURL::$url$args");
+		$response = $this->CI->cache->get($cache_id);
+
+		if ( ! $response)
+		{
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, $url . $args);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
+			if (($username) && ($password))
+			{
+				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+				curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+			}
+
+			if ($timeout)
+			{
+				curl_setopt($ch, CURLOPT_CONNECTTIEMOUT, $timeout);
+			}
+
+			$data = curl_exec($ch);
+			$info = curl_getinfo($ch);
+
+			curl_close($ch);
+
+			$response = (object) array(
+				'data' => $data,
+				'info' => $info
+			);
+			$this->CI->cache->save($cache_id, $response);
+		}
+
+		return $response;
+	}
+
 	public function array_filter_items($data, $filter_function, $filter_function_args=FALSE)
 	{
 		$items = array();

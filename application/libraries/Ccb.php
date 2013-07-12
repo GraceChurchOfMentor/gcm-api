@@ -6,6 +6,7 @@ class Ccb
 	{
 		$this->CI =& get_instance();
 		$this->CI->config->load('ccb');
+		$this->CI->load->library('utils');
 	}
 
 	public function get($srv, $args=FALSE)
@@ -13,59 +14,17 @@ class Ccb
 		$args || $args = array();
 		$args['srv'] = $srv;
 
-		$response = $this->cURL(
-			$this->CI->config->item('base_url'),
+		$response = $this->CI->utils->cURL(
+			$this->CI->config->item('ccb_base_url'),
 			$args,
-			$this->CI->config->item('username'),
-			$this->CI->config->item('password'),
-			$this->CI->config->item('timeout')
+			$this->CI->config->item('ccb_username'),
+			$this->CI->config->item('ccb_password'),
+			$this->CI->config->item('ccb_timeout')
 		);
 
 		$object = $this->xml_to_object($response->data);
 
 		return $object;
-	}
-
-	public function cURL($url, $args=FALSE, $username=FALSE, $password=FALSE, $timeout=FALSE)
-	{
-		$args && ($args = '?' . http_build_query($args)) || $args = '';
-
-		$this->CI->load->driver('cache', array('adapter' => 'file'));
-		$cache_id = "cURL::$url$args";
-		$response = $this->CI->cache->get($cache_id);
-
-		if ( ! $response)
-		{
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, $url . $args);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-
-			if (($username) && ($password))
-			{
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-				curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-			}
-
-			if ($timeout)
-			{
-				curl_setopt($ch, CURLOPT_CONNECTTIEMOUT, $timeout);
-			}
-
-			$data = curl_exec($ch);
-			$info = curl_getinfo($ch);
-
-			curl_close($ch);
-
-			$response = (object) array(
-				'data' => $data,
-				'info' => $info
-			);
-			$this->CI->cache->save($cache_id, $response);
-		}
-
-		return $response;
 	}
 
 	public function xml_to_object($xml)
