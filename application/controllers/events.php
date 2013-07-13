@@ -8,7 +8,7 @@ class Events extends REST_Controller {
 	{
 		parent::__construct();
 
-		$this->load->driver('cache', array('adapter' => 'apc'));
+		$this->load->driver('cache', array('adapter' => 'file'));
 		$this->load->library('ccb');
 		$this->load->config('gcm');
 		$this->default_count = $this->config->item('events_default_count');

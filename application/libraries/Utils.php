@@ -11,7 +11,7 @@ class Utils
 	{
 		$args && ($args = '?' . http_build_query($args)) || $args = '';
 
-		$this->CI->load->driver('cache', array('adapter' => 'apc'));
+		$this->CI->load->driver('cache', array('adapter' => 'file'));
 		$cache_id = md5("cURL::$url$args");
 		$response = $this->CI->cache->get($cache_id);
 
