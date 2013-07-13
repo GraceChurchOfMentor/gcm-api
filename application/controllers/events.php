@@ -8,7 +8,7 @@ class Events extends REST_Controller {
 	{
 		parent::__construct();
 
-		$this->load->driver('cache', array('adapter' => 'file'));
+		$this->load->driver('cache', array('adapter' => 'apc'));
 		$this->load->library('ccb');
 		$this->load->config('gcm');
 		$this->default_count = $this->config->item('events_default_count');
@@ -28,7 +28,7 @@ class Events extends REST_Controller {
 			'trim'         => $this->get('trim')
 		);
 
-		$cache_id = 'events/index?' . http_build_query($args);
+		$cache_id = md5('events::index::' . $this->utils->array_implode_associative($args));
 		$data = $this->cache->get($cache_id);
 
 		if ( ! $data)
