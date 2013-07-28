@@ -9,8 +9,12 @@ class Welcome extends CI_Controller {
 
 	function index()
 	{
-		$this->load->helper('url');
-		$this->load->view('welcome_message');
+		$template_data = array(
+			'title' => 'Grace Church of Mentor Public API',
+		);
+		$this->load->view('tpl-header', $template_data);
+		$this->load->view('welcome', $template_data);
+		$this->load->view('tpl-footer', $template_data);
 	}
 }
 

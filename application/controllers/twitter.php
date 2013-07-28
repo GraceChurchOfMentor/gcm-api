@@ -23,7 +23,7 @@ class Twitter extends REST_Controller {
 			'trim'         => $this->get('trim')
 		);
 
-		$cache_id = md5('twitter::index::' . $this->utils->array_implode_associative($args));
+		$cache_id = md5('twitter::index::' . serialize($args));
 		$data = $this->cache->get($cache_id);
 
 		if ( ! $data)

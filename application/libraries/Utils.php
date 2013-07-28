@@ -91,19 +91,6 @@ class Utils
 		return $groups;
 	}
 
-	public function array_implode_associative($array, $si='=>', $so=',')
-	{
-		$new_array = array();
-
-		foreach ($array as $k => $v)
-		{
-			if ($v == NULL) $v = 'NULL';
-			$new_array[] = "$k$si$v";
-		}
-
-		return implode($so, $new_array);
-	}
-
 	public function normalize_string($string)
 	{
 		$string = preg_replace('/[^a-zA-z0-9 ]/', ' ', $string);

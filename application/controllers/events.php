@@ -28,7 +28,7 @@ class Events extends REST_Controller {
 			'trim'         => $this->get('trim')
 		);
 
-		$cache_id = md5('events::index::' . $this->utils->array_implode_associative($args));
+		$cache_id = md5('events::index::' . serialize($args));
 		$data = $this->cache->get($cache_id);
 
 		if ( ! $data)
@@ -73,14 +73,17 @@ class Events extends REST_Controller {
 
 		if ($this->response->format == 'html')
 		{
+			$full_page = ! $args['trim'];
+
 			$template_data = array(
 				'title'     => 'Upcoming Events',
-				'full_page' => ! $args['trim'],
 				'details'   => $args['show_details'],
 				'items'     => $data
 			);
 
+			$full_page && $this->load->view('tpl-header', $template_data);
 			$this->load->view('events_html', $template_data);
+			$full_page && $this->load->view('tpl-footer', $template_data);
 		}
 		else
 		{
