@@ -8,7 +8,7 @@ class Events extends REST_Controller {
 	{
 		parent::__construct();
 
-		$this->load->driver('cache', array('adapter' => 'file'));
+		$this->load->driver('cache', array('adapter' => 'dummy'));
 		$this->load->library('ccb');
 		$this->load->config('gcm');
 		$this->default_count = $this->config->item('events_default_count');
@@ -36,58 +36,73 @@ class Events extends REST_Controller {
 			$args['count'] || $args['count'] = $this->default_count;
 			$events = $this->_get_raw_listing();
 
-			if ($args['featured'])
+			if ($events)
 			{
-				// filter only those events whose names start with an asterisk
-				$events = $this->utils->array_filter_items($events, function($event){
-					return strpos($event->event_name, '*') !== FALSE;
-				});
+				if ($args['featured'])
+				{
+					// filter only those events whose names start with an asterisk
+					$events = $this->utils->array_filter_items($events, function($event){
+						return strpos($event->event_name, '*') !== FALSE;
+					});
+				}
+
+				if ($args['group'])
+				{
+					// filter only those events from this group
+					$t = $this;
+					$events = $this->utils->array_filter_items($events, function($event, $args) use ($t){
+						$group = strtolower($t->utils->normalize_string($event->group_name));
+						$query = strtolower($args['group']);
+
+						return ($group == $query);
+					}, array('group'=>urldecode($args['group'])));
+				}
+
+				if ($args['search'])
+				{
+					// filter search query
+					$events = $this->utils->array_filter_items($events, function($event, $args){
+						$fields = strtolower(implode((array)$event, ','));
+						$query = strtolower($args['query']);
+
+						return (strstr($fields, $query) !== FALSE);
+					}, array('query'=>$args['search']));
+				}
+
+				$data = $this->_format_events($events, $args['count'], $args['show_details']);
+				$this->cache->save($cache_id, $data);
 			}
-
-			if ($args['group'])
-			{
-				// filter only those events from this group
-				$t = $this;
-				$events = $this->utils->array_filter_items($events, function($event, $args) use ($t){
-					$group = strtolower($t->utils->normalize_string($event->group_name));
-					$query = strtolower($args['group']);
-
-					return ($group == $query);
-				}, array('group'=>urldecode($args['group'])));
-			}
-
-			if ($args['search'])
-			{
-				// filter search query
-				$events = $this->utils->array_filter_items($events, function($event, $args){
-					$fields = strtolower(implode((array)$event, ','));
-					$query = strtolower($args['query']);
-
-					return (strstr($fields, $query) !== FALSE);
-				}, array('query'=>$args['search']));
-			}
-
-			$data = $this->_format_events($events, $args['count'], $args['show_details']);
-			$this->cache->save($cache_id, $data);
 		}
 
-		if ($this->response->format == 'html')
+		/*
+		 * adding a very long comment to trigger an inotify on the test 
+		 * server
+		 */
+		
+		if (count($data))
 		{
-			$full_page = ! $args['trim'];
+			if ($this->response->format == 'html')
+			{
+				$full_page = ! $args['trim'];
 
-			$template_data = array(
-				'title'     => 'Upcoming Events',
-				'details'   => $args['show_details'],
-				'items'     => $data
-			);
+				$template_data = array(
+					'title'     => 'Upcoming Events',
+					'details'   => $args['show_details'],
+					'items'     => $data
+				);
 
-			$full_page && $this->load->view('tpl-header', $template_data);
-			$this->load->view('events_html', $template_data);
-			$full_page && $this->load->view('tpl-footer', $template_data);
+				$full_page && $this->load->view('tpl-header', $template_data);
+				$this->load->view('events_html', $template_data);
+				$full_page && $this->load->view('tpl-footer', $template_data);
+			}
+			else
+			{
+				$this->response($data);
+			}
 		}
 		else
 		{
-			$this->response($data);
+			$this->output->set_status_header('204');
 		}
 	}
 
@@ -122,7 +137,12 @@ class Events extends REST_Controller {
 			$events[] = $item;
 		}
 		
-		return $events;
+		if (count($events))
+		{
+			return $events;
+		}
+
+		return FALSE;
 	}
 
 	private function _format_events($events, $count, $show_details)
