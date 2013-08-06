@@ -8,7 +8,7 @@ class Events extends REST_Controller {
 	{
 		parent::__construct();
 
-		$this->load->driver('cache', array('adapter' => 'dummy'));
+		$this->load->driver('cache', array('adapter' => 'file'));
 		$this->load->library('ccb');
 		$this->load->config('gcm');
 		$this->default_count = $this->config->item('events_default_count');
@@ -20,6 +20,7 @@ class Events extends REST_Controller {
 		$args = array(
 			'date_start'   => $this->get('date_start'),
 			'date_end'     => $this->get('date_end'),
+			'timeframe'    => $this->get('timeframe'),
 			'featured'     => $this->get('featured'),
 			'count'        => $this->get('count'),
 			'group'        => $this->get('group'),
@@ -34,7 +35,7 @@ class Events extends REST_Controller {
 		if ( ! $data)
 		{
 			$args['count'] || $args['count'] = $this->default_count;
-			$events = $this->_get_raw_listing();
+			$events = $this->_get_raw_listing($args['date_start'], $args['date_end'], $args['timeframe']);
 
 			if ($events)
 			{
@@ -74,11 +75,6 @@ class Events extends REST_Controller {
 			}
 		}
 
-		/*
-		 * adding a very long comment to trigger an inotify on the test 
-		 * server
-		 */
-		
 		if (count($data))
 		{
 			if ($this->response->format == 'html')
@@ -103,6 +99,7 @@ class Events extends REST_Controller {
 		else
 		{
 			$this->output->set_status_header('204');
+			echo "Nothing to display.";
 		}
 	}
 
@@ -119,10 +116,11 @@ class Events extends REST_Controller {
 		}
 	}
 
-	private function _get_raw_listing($date_start=FALSE, $date_end=FALSE)
+	private function _get_raw_listing($date_start=FALSE, $date_end=FALSE, $timeframe=FALSE)
 	{
+		$timeframe = $timeframe ? urldecode($timeframe) : $this->config->item('events_default_timeframe');
 		$date_start = $this->utils->normalize_time($date_start);
-		$date_end = $date_end ? $this->utils->normalize_time($date_end) : $this->utils->normalize_time($this->config->item('events_default_timeframe'));
+		$date_end = $date_end ? $this->utils->normalize_time($date_end) : $this->utils->normalize_time($timeframe);
 
 		// get the full Public Calendar listing for the next month
 		$data = $this->ccb->get('public_calendar_listing', array(
