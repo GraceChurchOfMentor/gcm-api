@@ -5,6 +5,13 @@ This API drives dynamic content for the Grace Church of Mentor website.
 It takes advantage of APIs offered by third parties and provides caching
 and other customizations to improve site performance.
 
+### Examples
+
+-   `/events` Upcoming CCB Events, HTML Output (Default)
+-   `/events?trim=1` - Same as above, with the header/footer markup trimmed for easy embedding within another page via AJAX
+-   `/events/index.xml` Get it in XML
+-   `/events/index.json` Get it in JSON
+
 
 
 ----------------------------
