@@ -1,3 +1,16 @@
+# Grace Church of Mentor Public API
+## Based on Phil Sturgeon's [CodeIgniter REST Server](https://github.com/philsturgeon/codeigniter-restserver)
+
+This API drives dynamic content for the Grace Church of Mentor website.
+It takes advantage of APIs offered by third parties and provides caching
+and other customizations to improve site performance.
+
+
+
+----------------------------
+
+
+
 # CodeIgniter Rest Server
 
 A fully RESTful server implementation for CodeIgniter using one library, one
