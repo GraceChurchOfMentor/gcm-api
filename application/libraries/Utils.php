@@ -21,7 +21,7 @@ class Utils
 
 			curl_setopt($ch, CURLOPT_URL, $url . $args);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
 
 			if (($username) && ($password))
 			{

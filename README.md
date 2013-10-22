@@ -7,14 +7,17 @@ and other customizations to improve site performance.
 
 ### Examples
 
--   `/events` Upcoming CCB Events, HTML Output (Default)
--   `/events?trim=1` - Same as above, with the header/footer markup trimmed for easy embedding within another page via AJAX
+-   `/events/index.html` Upcoming CCB Events, HTML Output
+-   `/events` Same as above (Format defaults to HTML when no format specified)
+-   `/events/index.html?trim=1` - Same as above, with the header/footer markup trimmed for easy embedding within another page via AJAX
 -   `/events/index.xml` Get it in XML
 -   `/events/index.json` Get it in JSON
 
 
 
-----------------------------
+Below is the original README for Phil Sturgeon's `codeigniter-restserver`
+
+-------------------------------------------------------------------------
 
 
 

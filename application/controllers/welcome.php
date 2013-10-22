@@ -5,16 +5,33 @@ class Welcome extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
+
+		$this->load->driver('cache', array('adapter' => 'file'));
 	}
 
 	function index()
 	{
-		$template_data = array(
-			'title' => 'Grace Church of Mentor Public API',
-		);
-		$this->load->view('tpl-header', $template_data);
-		$this->load->view('welcome', $template_data);
-		$this->load->view('tpl-footer', $template_data);
+		$cache_id = md5('welcome::index');
+		$data = $this->cache->get($cache_id);
+
+		if ( ! $data)
+		{
+			require_once('application/libraries/php-markdown/Michelf/Markdown.php');
+
+			$readme = \Michelf\Markdown::defaultTransform(file_get_contents('README.md'));
+			$readme = preg_replace('@<code>/([^<]*)</code>@', '<code><a href="$1">/$1</a></code>', $readme);
+
+			$data = array(
+				'title' => FALSE,
+				'readme' => $readme
+			);
+
+			$this->cache->save($cache_id, $data);
+		}
+
+		$this->load->view('tpl-header', $data);
+		$this->load->view('welcome', $data);
+		$this->load->view('tpl-footer', $data);
 	}
 }
 

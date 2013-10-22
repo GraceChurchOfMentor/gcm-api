@@ -3,7 +3,12 @@
 	<head>
 		<meta charset="utf-8" />	
 		<title><?php echo $title; ?></title>
+		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/2.1.3/normalize.min.css" />
+		<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:300|Roboto:300,300italic,500' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets/css/style.css'); ?>" />
 	</head>
 	<body>
-		<h1><?php echo $title; ?></h1>
+		<div class="wrap">
+			<?php if ($title): ?>
+				<h1><?php echo $title; ?></h1>
+			<?php endif; ?>
