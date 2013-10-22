@@ -8,9 +8,9 @@ class Twitter extends REST_Controller {
 	{
 		parent::__construct();
 
-		$this->load->driver('cache', array('adapter' => 'file'));
 		$this->load->config('gcm');
 		$this->default_count = $this->config->item('twitter_default_count');
+		$this->load->driver('cache', array('adapter' => $this->config->item('cache_default_driver')));
 	}
 
 	public function index_get()

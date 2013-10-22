@@ -5,13 +5,15 @@ class Utils
 	function __construct()
 	{
 		$this->CI =& get_instance();
+
+		$this->CI->load->config('gcm');
+		$this->CI->load->driver('cache', array('adapter' => $this->CI->config->item('cache_default_driver')));
 	}
 
 	public function cURL($url, $args=FALSE, $username=FALSE, $password=FALSE, $timeout=FALSE)
 	{
 		$args && ($args = '?' . http_build_query($args)) || $args = '';
 
-		$this->CI->load->driver('cache', array('adapter' => 'file'));
 		$cache_id = md5("cURL::$url$args");
 		$response = $this->CI->cache->get($cache_id);
 
