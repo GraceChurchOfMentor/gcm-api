@@ -24,6 +24,9 @@ class Bible extends REST_Controller {
 		$cache_id = md5('bible::index::' . serialize($args));
 		$data = $this->cache->get($cache_id);
 
+		echo 'placeholder';
+
+		/*
 		if ( ! $data)
 		{
 			$args['reference'] || $args['reference'] = $this->default_reference;
@@ -93,5 +96,6 @@ class Bible extends REST_Controller {
 			$this->output->set_status_header('204');
 			echo "Nothing to display.";
 		}
+		 */
 	}
 }
