@@ -9,4 +9,4 @@ $config['events_default_count'] = 4;
 $config['events_default_timeframe'] = '+ 1 month';
 
 # the default bible reference to retrieve, if none given
-$config['bible_default_reference'] = 'John 3:16';
+$config['bible_default_reference'] = 'John+3:16';
