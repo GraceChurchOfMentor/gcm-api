@@ -1,5 +1,5 @@
-.htaccess
 application/config/ccb.php
 application/config/biblesorg.php
 application/cache
 *.swp
+.htaccess
