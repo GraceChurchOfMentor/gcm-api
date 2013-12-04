@@ -51,6 +51,7 @@ class Bible extends REST_Controller {
 				$full_page = ! $args['trim'];
 
 				$template_data = array(
+					'reference' => $this->get('reference'),
 					'title'     => "$data->display ($data->version_abbreviation)",
 					'text'      => $data->text,
 					'copyright' => $data->copyright
