@@ -1,3 +1,4 @@
+<header><?php echo $title; ?></header>
 <blockquote>
 	<?php echo $text; ?>
 	<cite>

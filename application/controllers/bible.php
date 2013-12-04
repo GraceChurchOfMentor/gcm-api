@@ -20,7 +20,7 @@ class Bible extends REST_Controller {
 		$args = array(
 			'reference'   => $this->get('reference'),
 			'version'     => $this->get('version'),
-			'trim'         => $this->get('trim')
+			'trim'        => $this->get('trim')
 		);
 
 		$cache_id = md5('bible::index::' . serialize($args));
