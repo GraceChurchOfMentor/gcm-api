@@ -49,13 +49,14 @@ class Events extends REST_Controller {
 
 				if ($args['group'])
 				{
-					// filter only those events from this group
+					// filter only those events from the specified group(s)
 					$t = $this;
 					$events = $this->utils->array_filter_items($events, function($event, $args) use ($t){
-						$group = strtolower($t->utils->normalize_string($event->group_name));
 						$query = strtolower($args['group']);
+                        $groups = explode('|', $query);
+						$group = strtolower($t->utils->normalize_string($event->group_name));
 
-						return ($group == $query);
+						return in_array($group, $groups);
 					}, array('group'=>urldecode($args['group'])));
 				}
 
