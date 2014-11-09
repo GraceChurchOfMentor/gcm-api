@@ -173,8 +173,8 @@ class Events extends REST_Controller {
 				$new_event = array(
 					'date'              => $event['date'],
 					'event_name'        => $event['event_name'],
-					'start_time_string' => date('g:ia', strtotime($event['start_time'])),
-					'end_time_string'   => date('g:ia', strtotime($event['end_time'])),
+					'start_time_string' => $this->utils->ap_time($event['start_time']),
+					'end_time_string'   => $this->utils->ap_time($event['end_time']),
 					'event_description' => is_array($event['event_description']) ? '' : $event['event_description'],
 					'location'          => is_array($event['location']) ? '' : $event['location'],
 					'leader_name'       => $event['leader_name'],
@@ -189,7 +189,7 @@ class Events extends REST_Controller {
 				}
 				else
 				{
-					$new_event['time_string'] = $new_event['start_time_string'] . '&#8209;' . $new_event['end_time_string'];
+					$new_event['time_string'] = $new_event['start_time_string'] . ' &ndash; ' . $new_event['end_time_string'];
 					$new_event['short_time_string'] = $new_event['start_time_string'];
 				}
 
