@@ -109,14 +109,15 @@ class Utils
 
     public function ap_time($string)
     {
-        $string = date('g:i a', strtotime($string));
+        $date = strtotime($string);
+        $hh = date('g', $date);
+        $mm = date('i', $date);
+        $ampm = date('a', $date);
 
-        // remove extraneous double-oughts
-        $string = str_replace(':00', '', $string);
+        $mm = $mm !== "00" ? ":$mm" : "";
 
-        // replace incorrect a.m./p.m. formatting
-        $string = str_replace(array('am', 'pm', 'AM', 'PM'), array('a.m.', 'p.m.', 'a.m.', 'p.m.'), $string);
+        $ampm = "{$ampm[0]}.m.";
 
-        return $string;
+        return "$hh$mm $ampm";
     }
 }
