@@ -72,7 +72,7 @@ class Events extends REST_Controller {
 				}
 
 				$data = $this->_format_events($events, $args['count'], $args['show_details']);
-				$this->cache->save($cache_id, $data);
+				$this->cache->save($cache_id, $data, 3600);
 			}
 		}
 
