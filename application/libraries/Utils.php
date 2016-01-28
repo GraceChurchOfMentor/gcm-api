@@ -120,4 +120,19 @@ class Utils
 
         return "$hh$mm $ampm";
     }
+
+    public function uuid_make($string) {
+        $md5 = md5($string);
+        $uuid_parts = array(
+            substr($md5, 0, 8),
+            substr($md5, 8, 4),
+            substr($md5, 12, 4),
+            substr($md5, 16, 4),
+            substr($md5, 20)
+        );
+
+        $uuid = implode('-', $uuid_parts);
+
+        return $uuid;
+    }
 }
