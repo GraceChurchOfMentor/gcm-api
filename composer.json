@@ -1,0 +1,13 @@
+{
+    "name": "njbair/gcm-api-v1",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^4.1"
+    },
+    "authors": [
+        {
+            "name": "Nick Bair",
+            "email": "njbair@gmail.com"
+        }
+    ]
+}
