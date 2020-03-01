@@ -1,6 +1,6 @@
-application/config/ccb.php
-application/config/biblesorg.php
-application/cache
-v2
+/application/config/ccb.php
+/application/config/biblesorg.php
+/application/cache
+!/application/cache/.gitkeep
 *.swp
 .htaccess
